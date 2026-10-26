@@ -9,6 +9,7 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
+app.use(express.json());
 const isProduction = process.env.NODE_ENV === 'production';
 const port = Number(process.env.PORT || 3000);
 const sessionSecret = process.env.SESSION_SECRET || '';
@@ -126,6 +127,12 @@ app.use(session({
   cookie: { httpOnly: true, secure: isProduction, sameSite: 'lax', maxAge: 8 * 60 * 60 * 1000 }
 }));
 app.use('/api/admin/login', rateLimit({ windowMs: 15 * 60 * 1000, limit: 8, standardHeaders: true, legacyHeaders: false, message: { error: 'অনেকবার চেষ্টা করা হয়েছে। ১৫ মিনিট পরে আবার চেষ্টা করুন।' } }));
+app.use('/api/admin/reset-password', rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 3,
+  standardHeaders: true,
+  legacyHeaders: false
+}));
 app.use('/api/orders', rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, standardHeaders: true, legacyHeaders: false }));
 
 function sameOrigin(req, res, next) {
