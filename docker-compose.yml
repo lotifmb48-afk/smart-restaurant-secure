@@ -1,0 +1,21 @@
+services:
+  smart-restaurant:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smart-restaurant
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      SESSION_SECRET: ${R7v!fQ9#xv2&mN8$jT5^wZ4&bH6*eF1lF}
+      ADMIN_USERNAME: ${restaurantadmin}
+      ADMIN_PASSWORD: ${Website90*&9}
+    volumes:
+      - restaurant_data:/app/data
+
+volumes:
+  restaurant_data:
