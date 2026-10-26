@@ -1,3 +1,4 @@
+```yaml
 services:
   smart-restaurant:
     build:
@@ -11,11 +12,12 @@ services:
       - .env
     environment:
       NODE_ENV: production
-      SESSION_SECRET: ${R7v!fQ9#xv2&mN8$jT5^wZ4&bH6*eF1lF}
-      ADMIN_USERNAME: ${restaurantadmin}
-      ADMIN_PASSWORD: ${Website90*&9}
+      SESSION_SECRET: ${SESSION_SECRET}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     volumes:
       - restaurant_data:/app/data
 
 volumes:
   restaurant_data:
+```
