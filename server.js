@@ -69,16 +69,22 @@ CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(created_at);
 CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON order_items(order_id);
 CREATE INDEX IF NOT EXISTS idx_sessions_expired_at ON sessions(expired_at);
 `);
-
 const dummyPasswordHash = bcrypt.hashSync('dummy-password-for-timing-only', 12);
+
 const adminCount = db.prepare('SELECT COUNT(*) AS n FROM admins').get().n;
+
 if (adminCount === 0) {
   const hash = bcrypt.hashSync(process.env.ADMIN_PASSWORD, 12);
-  db.prepare('INSERT INTO admins (username, password_hash) VALUES (?, ?)').run(process.env.ADMIN_USERNAME, hash);
+
+  db.prepare(
+    'INSERT INTO admins (username, password_hash) VALUES (?, ?)'
+  ).run(process.env.ADMIN_USERNAME, hash);
+
   console.log('Initial admin account created from environment variables.');
 } else {
-  const existing = db.prepare('SELECT username FROM admins WHERE username = ?').get(process.env.ADMIN_USERNAME);
-  if (!existing) console.warn('Admin already exists in database. Environment username does not replace existing admin.');
+  console.warn(
+    'Admin already exists. Existing credentials are preserved.'
+  );
 }
 
 class SQLiteSessionStore extends session.Store {
@@ -194,6 +200,74 @@ app.post('/api/orders', sameOrigin, (req, res) => {
 });
 
 app.get('/api/admin/me', (req, res) => res.json({ loggedIn: Boolean(req.session.adminId), username: req.session.adminUsername || null }));
+app.post('/api/admin/reset-password', sameOrigin, async (req, res) => {
+  try {
+    const crypto = require('crypto');
+    const resetToken = process.env.ADMIN_RESET_TOKEN;
+
+    if (!resetToken) {
+      return res.status(404).json({ error: 'এই সুবিধা চালু নেই।' });
+    }
+
+    const suppliedToken = String(req.body.token || '');
+    const expected = Buffer.from(resetToken);
+    const supplied = Buffer.from(suppliedToken);
+
+    if (
+      expected.length !== supplied.length ||
+      !crypto.timingSafeEqual(expected, supplied)
+    ) {
+      return res.status(403).json({ error: 'অনুমতি দেওয়া হয়নি।' });
+    }
+
+    const username = cleanString(req.body.username, 100, 'ইউজারনেম');
+    const password = String(req.body.password || '');
+
+    if (password.length < 12 || password.length > 200) {
+      return res.status(400).json({
+        error: 'পাসওয়ার্ড কমপক্ষে ১২ অক্ষরের হতে হবে।'
+      });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 12);
+
+    const resetAdmin = db.transaction(() => {
+      const admin = db.prepare(
+        'SELECT id FROM admins ORDER BY id LIMIT 1'
+      ).get();
+
+      if (admin) {
+        db.prepare(
+          'UPDATE admins SET username = ?, password_hash = ? WHERE id = ?'
+        ).run(username, passwordHash, admin.id);
+      } else {
+        db.prepare(
+          'INSERT INTO admins (username, password_hash) VALUES (?, ?)'
+        ).run(username, passwordHash);
+      }
+
+      db.prepare('DELETE FROM sessions').run();
+    });
+
+    resetAdmin();
+
+    return res.json({
+      ok: true,
+      message: 'অ্যাডমিন অ্যাকাউন্ট রিসেট হয়েছে।'
+    });
+  } catch (error) {
+    if (error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+      return res.status(409).json({
+        error: 'এই ইউজারনেমটি আগে থেকেই ব্যবহৃত হচ্ছে।'
+      });
+    }
+
+    console.error('Admin reset failed.');
+    return res.status(500).json({
+      error: 'রিসেট করা যায়নি। সার্ভার কনফিগারেশন পরীক্ষা করুন।'
+    });
+  }
+});
 app.post('/api/admin/login', sameOrigin, async (req, res) => {
   try {
     const username = cleanString(req.body.username, 100, 'ইউজারনেম');
