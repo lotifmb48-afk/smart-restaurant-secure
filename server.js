@@ -165,25 +165,30 @@ function sameOrigin(req, res, next) {
     if (new URL(origin).host !== req.get('host')) return res.status(403).json({ error: 'Cross-origin request blocked.' });
   } catch { return res.status(403).json({ error: 'Invalid origin.' }); }
   next();
-}
 function requireAdmin(req, res, next) {
   if (!req.session.adminId) {
-    return res.status(401).json({ error: 'অ্যাডমিন হিসেবে লগইন করুন।' });
+    return res.status(401).json({
+      error: 'অ্যাডমিন হিসেবে লগইন করুন।'
+    });
   }
+
   next();
 }
 
 function requireFullAdmin(req, res, next) {
   if (!req.session.adminId) {
-    return res.status(401).json({ error: 'অ্যাডমিন হিসেবে লগইন করুন।' });
+    return res.status(401).json({
+      error: 'অ্যাডমিন হিসেবে লগইন করুন।'
+    });
   }
 
   if (req.session.adminRole !== 'admin') {
-    return res.status(403).json({ error: 'Demo account is read-only.' });
+    return res.status(403).json({
+      error: 'Demo account is read-only.'
+    });
   }
 
   next();
-}
 }
 function cleanString(value, max, label, required = true) {
   if (typeof value !== 'string') throw new Error(`${label} সঠিকভাবে দিন।`);
