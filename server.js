@@ -620,6 +620,42 @@ app.post('/api/admin/reset-password', sameOrigin, async (req, res) => {
   }
 });
 
+app.post('/api/admin/demo-login', sameOrigin, (req, res) => {
+  try {
+    const demo = db.prepare(`
+      SELECT id, username, role FROM admins
+      WHERE role = 'demo'
+      ORDER BY id ASC LIMIT 1
+    `).get();
+
+    if (!demo) {
+      return res.status(503).json({
+        error: 'ডেমো অ্যাকাউন্ট কনফিগার করা নেই।'
+      });
+    }
+
+    req.session.regenerate(err => {
+      if (err) {
+        return res.status(500).json({ error: 'ডেমো লগইন করা যায়নি।' });
+      }
+
+      req.session.adminId = demo.id;
+      req.session.adminUsername = demo.username;
+      req.session.adminRole = 'demo';
+
+      req.session.save(saveErr => {
+        if (saveErr) {
+          return res.status(500).json({ error: 'ডেমো সেশন সংরক্ষণ করা যায়নি।' });
+        }
+        res.json({ ok: true, username: demo.username, role: 'demo' });
+      });
+    });
+  } catch (error) {
+    console.error('Demo login failed.');
+    res.status(500).json({ error: 'ডেমো লগইন করা যায়নি।' });
+  }
+});
+
 app.post('/api/admin/login', sameOrigin, async (req, res) => {
   try {
     const username = cleanString(

@@ -1,0 +1,15 @@
+Smart Restaurant - Vibe96 update notes
+
+এই আপডেটে:
+- Login screen-এ one-click Admin Demo Login button যোগ হয়েছে।
+- Server-এ /api/admin/demo-login route যোগ হয়েছে; এটি শুধু role='demo' account-এ session তৈরি করে।
+- Home, Cart ও Checkout আলাদা page/view করা হয়েছে।
+- Visual theme dark blue/purple premium palette-এ আপডেট করা হয়েছে।
+- Menu card-এ real food photo ব্যবহার করা হয়েছে।
+
+গুরুত্বপূর্ণ:
+- এই source ZIP-এ কোনো live SQLite database বা .env নেই।
+- Render-এর existing persistent disk/database মুছবেন না বা replace করবেন না।
+- DEMO_ADMIN_USERNAME এবং DEMO_ADMIN_PASSWORD Render Environment-এ থাকতে হবে।
+- Real admin credentials অপরিবর্তিত রাখুন।
+- External Unsplash photo URL ব্যবহৃত হয়েছে; production listing-এর আগে নিজস্ব/licensed images দিয়ে প্রতিস্থাপন করা উত্তম।
