@@ -53,7 +53,7 @@ node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 - Changing `ADMIN_PASSWORD` after an admin already exists does not automatically change the stored password hash.
 - Configure `DEMO_ADMIN_USERNAME` and `DEMO_ADMIN_PASSWORD` to create a separate read-only demo account. The Admin Demo Login button uses that account.
 - Never use the real administrator account as the demo account.
-- The optional `ADMIN_RESET_TOKEN` endpoint is sensitive; set a long random token only when needed, use it once, then remove it from the environment.
+- No public password-reset endpoint is provided. Use a controlled private hosting/database administration procedure for account recovery.
 
 ## Branding
 Edit the public interface in `public/index.html`. Review the app title, restaurant name, menu items, currency formatting, contact details and licensed images before resale or deployment.
@@ -63,3 +63,30 @@ Edit the public interface in `public/index.html`. Review the app title, restaura
 - SQLite permission errors: ensure the app user can write to the directory containing `DATABASE_FILE`.
 - Missing demo account: configure both demo environment variables and restart the app.
 - Orders disappear after redeploy: the database path is on ephemeral storage; configure a persistent disk or managed database.
+
+
+## Automated checks
+
+Run the test suite after installing dependencies:
+
+```bash
+npm test
+```
+
+The suite includes an SQLite schema check and HTTP integration coverage for guest
+orders, administrator login, demo read-only permissions, and administrator menu/order
+mutations. Check dependency advisories before release with:
+
+```bash
+npm audit
+```
+
+Resolve reported vulnerabilities before publishing; do not treat an unavailable
+registry connection as a clean audit.
+
+## Project structure
+
+Application startup is in `server.js`; Express setup is in `src/app.js`; SQLite
+persistence and session storage are in `src/database.js` and `src/session-store.js`;
+shared security helpers are in `src/helpers.js`; public and admin endpoints are split
+between `src/routes-public.js` and `src/routes-admin.js`.
