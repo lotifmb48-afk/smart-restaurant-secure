@@ -60,3 +60,26 @@ The application creates its SQLite tables on startup. `database/schema.sql` is a
 
 ## Licence
 See [LICENSE-NOTE.md](LICENSE-NOTE.md) for the buyer-facing licence note.
+
+
+## Feature-to-file map
+
+| Feature | Location |
+|---|---|
+| Public menu | `public/index.html`, `GET /api/menu` in `server.js` |
+| Cart and checkout | `public/index.html` |
+| Guest order submission and server-side price validation | `POST /api/orders` in `server.js` |
+| Admin sign-in and demo sign-in | Admin login routes in `server.js` |
+| Admin order management | Admin order routes in `server.js` |
+| Sales dashboard | Admin dashboard in `public/index.html` |
+| Persistent SQLite data and sessions | `server.js`, `database/schema.sql` |
+
+Guest checkout is intentional: customers can submit orders without creating an account. Order listing and administration are restricted to authenticated admin sessions. The public API does not provide customer order-history or order-edit endpoints.
+
+
+## Project structure and tests
+
+The Express setup, SQLite database/session store, security helpers, public routes,
+and administrator routes are separated under `src/`. Run `npm test` for schema
+and HTTP integration tests. Run `npm audit` before release to review dependency
+advisories.

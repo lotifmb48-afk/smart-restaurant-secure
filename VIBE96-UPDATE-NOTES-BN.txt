@@ -1,15 +1,7 @@
-Smart Restaurant - Vibe96 update notes
+Smart Restaurant — Vibe96 Update v1.0.1
 
-এই আপডেটে:
-- Login screen-এ one-click Admin Demo Login button যোগ হয়েছে।
-- Server-এ /api/admin/demo-login route যোগ হয়েছে; এটি শুধু role='demo' account-এ session তৈরি করে।
-- Home, Cart ও Checkout আলাদা page/view করা হয়েছে।
-- Visual theme dark blue/purple premium palette-এ আপডেট করা হয়েছে।
-- Menu card-এ real food photo ব্যবহার করা হয়েছে।
+এই ZIP-এ server.js refactor করে src/ মডিউলে ভাগ করা হয়েছে, admin write routes-এ full-admin guard রাখা হয়েছে, guest order-এর menu lookup এবং admin order listing-এর N+1 query কমানো হয়েছে, এবং HTTP integration tests যোগ করা হয়েছে।
 
-গুরুত্বপূর্ণ:
-- এই source ZIP-এ কোনো live SQLite database বা .env নেই।
-- Render-এর existing persistent disk/database মুছবেন না বা replace করবেন না।
-- DEMO_ADMIN_USERNAME এবং DEMO_ADMIN_PASSWORD Render Environment-এ থাকতে হবে।
-- Real admin credentials অপরিবর্তিত রাখুন।
-- External Unsplash photo URL ব্যবহৃত হয়েছে; production listing-এর আগে নিজস্ব/licensed images দিয়ে প্রতিস্থাপন করা উত্তম।
+গুরুত্বপূর্ণ: এই build-এর JavaScript syntax ও route guard source review করা হয়েছে। npm registry timeout-এর কারণে এই পরিবেশে dependency install, সম্পূর্ণ npm test এবং npm audit শেষ করা যায়নি। তাই Vibe96-এ upload করার আগে নিজের কম্পিউটারে npm ci --include=dev, npm test, npm audit চালাবে। Live Render Demo Login-ও আলাদাভাবে পরীক্ষা করতে হবে।
+
+কোনো real .env বা password ZIP-এ নেই।
