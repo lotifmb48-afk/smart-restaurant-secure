@@ -1,7 +1,25 @@
-Smart Restaurant — Vibe96 Update v1.0.1
+Smart Restaurant — Vibe96 Buyer-ready update (v1.0.2)
 
-এই ZIP-এ server.js refactor করে src/ মডিউলে ভাগ করা হয়েছে, admin write routes-এ full-admin guard রাখা হয়েছে, guest order-এর menu lookup এবং admin order listing-এর N+1 query কমানো হয়েছে, এবং HTTP integration tests যোগ করা হয়েছে।
+এই সংস্করণে:
+- Login screen-এ One-click Admin Demo Login রাখা হয়েছে।
+- ডেটাবেস প্রথমবার তৈরি হলে read-only demo admin স্বয়ংক্রিয়ভাবে তৈরি হয়।
+- Demo dashboard-এ আসল ডেটা থাকলে পরিচয় গোপন করে দেখায়; অর্ডার না থাকলে response-only sample orders দেখায়। Sample order কখনো database-এ লেখা হয় না।
+- Demo account দিয়ে menu/order পরিবর্তন server-side-এ নিষিদ্ধ।
+- Home, Cart, Checkout এবং Admin Dashboard আলাদা view হিসেবে রাখা হয়েছে।
+- Premium restaurant-inspired design এবং dish-specific real food photography যোগ করা হয়েছে।
+- আসল admin credentials শুধু Render environment variables-এ রাখতে হবে।
 
-গুরুত্বপূর্ণ: এই build-এর JavaScript syntax ও route guard source review করা হয়েছে। npm registry timeout-এর কারণে এই পরিবেশে dependency install, সম্পূর্ণ npm test এবং npm audit শেষ করা যায়নি। তাই Vibe96-এ upload করার আগে নিজের কম্পিউটারে npm ci --include=dev, npm test, npm audit চালাবে। Live Render Demo Login-ও আলাদাভাবে পরীক্ষা করতে হবে।
+Render environment variables (আগেরগুলো অপরিবর্তিত রাখুন):
+SESSION_SECRET (কমপক্ষে 32 characters)
+ADMIN_USERNAME
+ADMIN_PASSWORD (কমপক্ষে 12 characters)
+NODE_ENV=production
 
-কোনো real .env বা password ZIP-এ নেই।
+DEMO_ADMIN_USERNAME / DEMO_ADMIN_PASSWORD আর প্রয়োজন নেই।
+Build Command: npm install
+Start Command: npm start
+
+গুরুত্বপূর্ণ:
+- GitHub-এ ZIP ফাইলটি সরাসরি upload করবেন না; extract করে project root-এর ফাইলগুলো upload করবেন।
+- node_modules, data, .env upload করবেন না।
+- এই আপডেটটি আপনার বর্তমান database মুছে ফেলে না।

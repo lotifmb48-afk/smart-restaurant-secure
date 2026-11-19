@@ -24,3 +24,7 @@
 - এটি অনলাইন পেমেন্ট gateway নয়। Cash on Delivery/ম্যানুয়াল অর্ডার রেকর্ডের ভিত্তি। bKash/Nagad/card payment নিতে হলে সংশ্লিষ্ট merchant gateway ও server-side verification যোগ করতে হবে।
 - কেবল HTML ফাইল ডাবল-ক্লিক করে খুললে API কাজ করবে না; `npm start` দিয়ে সার্ভার চালাতে হবে।
 - production-এ যাওয়ার আগে HTTPS, backup/restore, delivery fee, cancellation/refund policy, privacy notice এবং hosting-specific settings পরীক্ষা করুন।
+
+
+### Vibe96 Buyer Demo
+লগইন স্ক্রিনের **One-click Admin Demo Login** বাটনে চাপলেই read-only demo dashboard খুলবে। ডেমো অ্যাকাউন্ট ডেটাবেস প্রথমবার তৈরি হওয়ার সময় স্বয়ংক্রিয়ভাবে তৈরি হয়; আলাদা demo username/password প্রকাশ করতে হয় না। Demo account দিয়ে মেনু বা অর্ডার পরিবর্তন করা যায় না। আসল `ADMIN_USERNAME` ও `ADMIN_PASSWORD` গোপন রাখুন।

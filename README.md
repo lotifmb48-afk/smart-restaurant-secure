@@ -35,7 +35,7 @@ See [HowToSetup.md](HowToSetup.md) for local, VPS and Docker deployment instruct
 Create a private `.env` file from `.env.example`. Never put real credentials in README files, source control, screenshots or public archives. Generate a unique session secret and use a strong, unique administrator password.
 
 ## Demo access
-The login page provides a **Admin Demo Login** button. It works only when the seller configures `DEMO_ADMIN_USERNAME` and `DEMO_ADMIN_PASSWORD` in the deployment environment. The demo role is read-only; do not publish the real administrator credentials. Customer browsing and ordering require no customer account.
+The login page provides a **One-click Admin Demo Login** button. The server automatically creates a dedicated read-only demo account on first database initialization; no demo username or password needs to be published or configured. Demo sessions can inspect dashboard data and print receipts, but server-side authorization blocks menu and order mutations. Keep the real `ADMIN_USERNAME` and `ADMIN_PASSWORD` private. Customer browsing and ordering require no customer account.
 
 ## Screenshots
 Add current screenshots before marketplace submission:
@@ -55,7 +55,7 @@ The application creates its SQLite tables on startup. `database/schema.sql` is a
 - Use HTTPS in production.
 - Use a unique `SESSION_SECRET` of at least 32 characters.
 - Set a strong `ADMIN_PASSWORD` of at least 12 characters.
-- Configure demo credentials separately from the real admin account.
+- The read-only buyer demo account is provisioned automatically; do not share or publish demo credentials.
 - Review hosting persistence and backup settings before production use.
 
 ## Licence
